@@ -1,6 +1,6 @@
 from curl_cffi import AsyncSession
 
-from app.config import settings
+from app.config import SETTINGS
 
 
 async def analize_toxicity(text: str) -> float:
@@ -10,6 +10,6 @@ async def analize_toxicity(text: str) -> float:
             'requestedAttributes': {'TOXICITY': {}},
             'languages': ['ru', 'en']
         }
-        link = f'{settings.toxic.api_url}?key={settings.toxic.api_key.get_secret_value()}'
+        link = f'{SETTINGS.TOXIC.API_URL}?key={SETTINGS.TOXIC.API_KEY.get_secret_value()}'
         resp = await s.post(link, json=analyze_request)
         return resp.json()['attributeScores']['TOXICITY']['summaryScore']['value']

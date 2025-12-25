@@ -6,7 +6,7 @@ from aiogram.types import ChatMemberAdministrator
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.config import settings
+from app.config import SETTINGS
 from app.database import connection, User, Chat
 
 
@@ -28,7 +28,7 @@ async def job_day(bot: Bot, session: AsyncSession) -> None:
     chats = result.scalars().all()
     for chat in chats:
         try:
-            await bot.send_sticker(chat.id, settings.stickers.night_file_id)
+            await bot.send_sticker(chat.id, SETTINGS.STICKERS.NIGHT_FILE_ID)
             await bot.send_message(chat.id, text)
             member = await bot.get_chat_member(chat.id, bot_id)
             if not isinstance(member, ChatMemberAdministrator):

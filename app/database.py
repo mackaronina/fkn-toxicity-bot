@@ -8,7 +8,7 @@ from sqlalchemy import BigInteger, func, JSON
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncAttrs
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
-from app.config import settings
+from app.config import SETTINGS
 
 
 class CConnection(Connection):
@@ -17,14 +17,14 @@ class CConnection(Connection):
 
 
 engine = create_async_engine(
-    settings.db.get_url(),
+    SETTINGS.DB.get_url(),
     connect_args={
         "statement_cache_size": 0,
         "prepared_statement_cache_size": 0,
         "connection_class": CConnection,
     }
 )
-# 'sqlite+aiosqlite:///db.sqlite3'
+# 'sqlite+aiosqlite:///DB.sqlite3'
 async_session = async_sessionmaker(engine, expire_on_commit=False)
 
 

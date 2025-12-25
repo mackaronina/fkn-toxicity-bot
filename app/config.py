@@ -12,33 +12,33 @@ class ConfigBase(BaseSettings):
 
 
 class StickersSettings(ConfigBase):
-    model_config = SettingsConfigDict(env_prefix='sticker_')
-    sbu_file_id: str = 'CAACAgIAAxkBAAEKWrBlDPH3Ok1hxuoEndURzstMhckAAWYAAm8sAAIZOLlLPx0MDd1u460wBA'
-    porohobot_file_id: str = 'CAACAgIAAxkBAAEK-splffs7OZYtr8wzINEw4lxbvwywoAACXSoAAg2JiEoB98dw3NQ3FjME'
-    zelebot_file_id: str = 'CAACAgIAAxkBAAELGOplmDc9SkF-ZnVsdNl4vhvzZEo7BQAC5SwAAkrDgEr_AVwN_RkClDQE'
-    night_file_id: str = 'CAACAgIAAxkBAAEKWq5lDOyAX1vNodaWsT5amK0vGQe_ggACHCkAAspLuUtESxXfKFwfWTAE'
+    model_config = SettingsConfigDict(env_prefix='STICKER_')
+    SBU_FILE_ID: str = 'CAACAgIAAxkBAAEKWrBlDPH3Ok1hxuoEndURzstMhckAAWYAAm8sAAIZOLlLPx0MDd1u460wBA'
+    POROHOBOT_FILE_ID: str = 'CAACAgIAAxkBAAEK-splffs7OZYtr8wzINEw4lxbvwywoAACXSoAAg2JiEoB98dw3NQ3FjME'
+    ZELEBOT_FILE_ID: str = 'CAACAgIAAxkBAAELGOplmDc9SkF-ZnVsdNl4vhvzZEo7BQAC5SwAAkrDgEr_AVwN_RkClDQE'
+    NIGHT_FILE_ID: str = 'CAACAgIAAxkBAAEKWq5lDOyAX1vNodaWsT5amK0vGQe_ggACHCkAAspLuUtESxXfKFwfWTAE'
 
 
 class DbSettings(ConfigBase):
-    model_config = SettingsConfigDict(env_prefix='db_')
-    user: str
-    password: SecretStr
-    host: str
-    port: int
-    name: str
+    model_config = SettingsConfigDict(env_prefix='DB_')
+    USER: str
+    PASSWORD: SecretStr
+    HOST: str
+    PORT: int
+    NAME: str
 
     def get_url(self) -> str:
-        return (f'postgresql+asyncpg://{self.user}:{self.password.get_secret_value()}'
-                f'@{self.host}:{self.port}/{self.name}')
+        return (f'postgresql+asyncpg://{self.USER}:{self.PASSWORD.get_secret_value()}'
+                f'@{self.HOST}:{self.PORT}/{self.NAME}')
 
 
 class ToxicitySettings(ConfigBase):
-    model_config = SettingsConfigDict(env_prefix='toxic_')
-    api_key: SecretStr
-    api_url: str = 'https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze'
-    threshold: float = 0.6
-    reaction: str = '😈'
-    level_texts: dict[int, str] = {
+    model_config = SettingsConfigDict(env_prefix='TOXIC_')
+    API_KEY: SecretStr
+    API_URL: str = 'https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze'
+    THRESHOLD: float = 0.6
+    REACTION: str = '😈'
+    LEVEL_TEXTS: dict[int, str] = {
         10: 'Добрый чел позитивный',
         40: 'Норм чел',
         100: 'С гнильцой человек',
@@ -51,16 +51,16 @@ class ToxicitySettings(ConfigBase):
 
 
 class Settings(ConfigBase):
-    bot_token: SecretStr
-    webhook_domain: str
-    host: str = '0.0.0.0'
-    port: int = 80
-    report_chat_id: int
-    paint_web_app_url: str
-    time_zone: str = 'UTC'
-    toxic: ToxicitySettings = Field(default_factory=ToxicitySettings)
-    db: DbSettings = Field(default_factory=DbSettings)
-    stickers: StickersSettings = Field(default_factory=StickersSettings)
+    BOT_TOKEN: SecretStr
+    WEBHOOK_DOMAIN: str
+    HOST: str = '0.0.0.0'
+    PORT: int = 80
+    REPORT_CHAT_ID: int
+    PAINT_WEB_APP_URL: str
+    TIME_ZONE: str = 'UTC'
+    TOXIC: ToxicitySettings = Field(default_factory=ToxicitySettings)
+    DB: DbSettings = Field(default_factory=DbSettings)
+    STICKERS: StickersSettings = Field(default_factory=StickersSettings)
 
 
-settings = Settings()
+SETTINGS = Settings()

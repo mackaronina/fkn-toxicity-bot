@@ -6,7 +6,7 @@ from aiogram.types import Message
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.config import settings
+from app.config import SETTINGS
 from app.database import User, Chat
 from app.middlewares.db import DbSessionMiddleware
 
@@ -41,7 +41,7 @@ async def msg_top(message: Message, session: AsyncSession) -> None:
     await message.reply(text)
 
 
-@router.message(Command('toxic'))
+@router.message(Command('TOXIC'))
 async def msg_toxic(message: Message, session: AsyncSession) -> None:
     if message.reply_to_message is not None:
         user_id = message.reply_to_message.from_user.id
@@ -60,7 +60,7 @@ async def msg_toxic(message: Message, session: AsyncSession) -> None:
         max_toxic_text = None
         reactions_count = None
     text += f'Уровень токсичности:  {toxic_level} ☣️\n'
-    for limit, level_text in settings.toxic.level_texts.items():
+    for limit, level_text in SETTINGS.TOXIC.LEVEL_TEXTS.items():
         if toxic_level < limit:
             text += f'Диагноз:  {level_text}\n'
             break
