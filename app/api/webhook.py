@@ -4,10 +4,10 @@ from fastapi import APIRouter, Depends
 from fastapi.requests import Request
 from fastapi.responses import HTMLResponse
 
-from config import settings
-from utils.depends import get_bot, get_dp
+from app.config import settings
+from app.utils.depends import get_bot, get_dp
 
-router = APIRouter(prefix='')
+router = APIRouter()
 
 
 @router.post(f'/{settings.bot_token.get_secret_value()}', include_in_schema=False)

@@ -6,9 +6,9 @@ from aiogram.types import Message
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from config import settings
-from database import User, Chat
-from middlewares.db import DbSessionMiddleware
+from app.config import settings
+from app.database import User, Chat
+from app.middlewares.db import DbSessionMiddleware
 
 router = Router()
 router.message.middleware(DbSessionMiddleware())

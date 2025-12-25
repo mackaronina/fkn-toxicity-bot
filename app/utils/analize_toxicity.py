@@ -1,6 +1,6 @@
 from curl_cffi import AsyncSession
 
-from config import settings
+from app.config import settings
 
 
 async def analize_toxicity(text: str) -> float:

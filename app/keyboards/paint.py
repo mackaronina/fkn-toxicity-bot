@@ -1,7 +1,7 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from config import settings
+from app.config import settings
 
 
 def keyboard_paint_start(chat_id: int) -> InlineKeyboardMarkup:

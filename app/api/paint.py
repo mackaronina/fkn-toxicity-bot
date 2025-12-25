@@ -9,12 +9,12 @@ from fastapi.requests import Request
 from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
 
-from config import settings
-from keyboards.paint import keyboard_paint_continue
-from utils.depends import get_bot
+from app.config import settings, BASE_DIR
+from app.keyboards.paint import keyboard_paint_continue
+from app.utils.depends import get_bot
 
 router = APIRouter(prefix='/paint')
-templates = Jinja2Templates(directory='templates')
+templates = Jinja2Templates(directory=f'{BASE_DIR}/app/templates')
 
 
 @router.post('/send')

@@ -2,8 +2,8 @@ from aiogram import Router, types, F
 from aiogram.types import ReactionTypeEmoji
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database import User
-from middlewares.db import DbSessionMiddleware
+from app.database import User
+from app.middlewares.db import DbSessionMiddleware
 
 router = Router()
 router.message_reaction.middleware(DbSessionMiddleware())

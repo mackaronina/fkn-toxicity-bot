@@ -5,10 +5,10 @@ from aiogram import Router, F
 from aiogram.types import Message, ReactionTypeEmoji
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from config import settings
-from middlewares.db import DbSessionMiddleware
-from utils.analize_toxicity import analize_toxicity
-from utils.update_db_info import update_chat_info, update_user_info
+from app.config import settings
+from app.middlewares.db import DbSessionMiddleware
+from app.utils.analize_toxicity import analize_toxicity
+from app.utils.update_db_info import update_chat_info, update_user_info
 
 router = Router()
 router.message.middleware(DbSessionMiddleware())

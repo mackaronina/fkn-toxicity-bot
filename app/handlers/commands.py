@@ -2,8 +2,8 @@ from aiogram import Router, Bot
 from aiogram.filters import Command
 from aiogram.types import Message
 
-from keyboards.paint import keyboard_paint_start
-from utils.images_processing import get_profile_pic, generate_kill_sticker, generate_cube_gif, generate_pet_gif
+from app.keyboards.paint import keyboard_paint_start
+from app.utils.images_processing import get_profile_pic, generate_kill_sticker, generate_cube_gif, generate_pet_gif
 
 router = Router()
 

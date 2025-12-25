@@ -9,12 +9,12 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from api import webhook, paint
-from commands import set_commands
-from config import settings
+from app.api import webhook, paint
+from app.commands import set_commands
+from app.config import settings, BASE_DIR
+from app.handlers import toxic_commands, commands, reactions, chat_members, errors, messages
+from app.utils.jobs import job_day
 from database import create_tables
-from handlers import commands, toxic_commands, chat_members, errors, messages, reactions
-from utils.jobs import job_day
 
 
 async def main() -> None:
@@ -30,7 +30,7 @@ async def main() -> None:
     await set_commands(bot)
 
     app = FastAPI()
-    app.mount('/static', StaticFiles(directory='static'), 'static')
+    app.mount('static', StaticFiles(directory=f'{BASE_DIR}/app/static'), 'static')
     app.include_router(webhook.router)
     app.include_router(paint.router)
     app.state.bot = bot

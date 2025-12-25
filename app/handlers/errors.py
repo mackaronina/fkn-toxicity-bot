@@ -5,7 +5,7 @@ import traceback
 from aiogram import Router, Bot
 from aiogram.types import ErrorEvent, BufferedInputFile
 
-from config import settings
+from app.config import settings
 
 router = Router()
 

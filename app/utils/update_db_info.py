@@ -4,7 +4,7 @@ import logging
 from aiogram import types
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database import Chat, User
+from app.database import Chat, User
 
 
 async def update_chat_info(tg_chat: types.Chat, session: AsyncSession) -> None:

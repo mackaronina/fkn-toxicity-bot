@@ -10,6 +10,8 @@ from bs4 import BeautifulSoup
 from curl_cffi import CurlMime, AsyncSession
 from petpetgif.saveGif import save_transparent_gif
 
+from app.config import BASE_DIR
+
 
 async def get_profile_pic(message: Message, bot: Bot) -> BinaryIO | None:
     if message.reply_to_message is not None:
@@ -68,7 +70,7 @@ async def generate_pet_gif(profile_pic: BinaryIO) -> BufferedInputFile:
         canvas = Image.new('RGBA', size=resolution, color=mean)
         canvas.paste(base.resize((round(width * resolution[0]), round(height * resolution[1]))),
                      (round(offset_x * resolution[0]), round(offset_y * resolution[1])))
-        with Image.open(f'static/images/pet{i}.gif').convert('RGBA').resize(
+        with Image.open(f'{BASE_DIR}/app/static/images/pet{i}.gif').convert('RGBA').resize(
                 resolution) as pet:
             canvas.paste(pet, mask=pet)
         images.append(canvas)
@@ -81,7 +83,7 @@ def generate_kill_sticker(profile_pic: BinaryIO) -> BufferedInputFile:
     img = Image.open(profile_pic)
     img2 = Image.new(mode='RGBA', size=(900, 900))
     draw = ImageDraw.Draw(img2)
-    font = ImageFont.FreeTypeFont('static/fonts/times-new-roman.ttf', size=90)
+    font = ImageFont.FreeTypeFont(f'{BASE_DIR}/app/static/fonts/times-new-roman.ttf', size=90)
     draw.multiline_text((450, 450), 'ОТБАЙРАКТАРЕН', fill=(190, 0, 44), anchor='mm', font=font, align='center',
                         spacing=4, stroke_width=4, stroke_fill=(73, 73, 73))
     img2 = img2.rotate(45)

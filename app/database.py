@@ -8,7 +8,7 @@ from sqlalchemy import BigInteger, func, JSON
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncAttrs
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
-from config import settings
+from app.config import settings
 
 
 class CConnection(Connection):

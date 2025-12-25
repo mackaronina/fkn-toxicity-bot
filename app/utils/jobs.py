@@ -6,8 +6,8 @@ from aiogram.types import ChatMemberAdministrator
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from config import settings
-from database import connection, User, Chat
+from app.config import settings
+from app.database import connection, User, Chat
 
 
 @connection

@@ -3,7 +3,7 @@ from typing import Callable, Awaitable, Dict, Any
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject
 
-from database import async_session
+from app.database import async_session
 
 
 class DbSessionMiddleware(BaseMiddleware):
