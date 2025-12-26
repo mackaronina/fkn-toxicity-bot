@@ -19,8 +19,8 @@ class StickersSettings(ConfigBase):
     NIGHT_FILE_ID: str = 'CAACAgIAAxkBAAEKWq5lDOyAX1vNodaWsT5amK0vGQe_ggACHCkAAspLuUtESxXfKFwfWTAE'
 
 
-class DbSettings(ConfigBase):
-    model_config = SettingsConfigDict(env_prefix='DB_')
+class PostgresSettings(ConfigBase):
+    model_config = SettingsConfigDict(env_prefix='POSTGRES_')
     USER: str
     PASSWORD: SecretStr
     HOST: str
@@ -53,13 +53,15 @@ class ToxicitySettings(ConfigBase):
 class Settings(ConfigBase):
     BOT_TOKEN: SecretStr
     WEBHOOK_DOMAIN: str
+    USE_SQLITE: bool = False
+    SQLITE_URL: str = 'sqlite+aiosqlite:///db.sqlite3'
     HOST: str = '0.0.0.0'
     PORT: int = 80
     REPORT_CHAT_ID: int
     PAINT_WEB_APP_URL: str
     TIME_ZONE: str = 'UTC'
     TOXIC: ToxicitySettings = Field(default_factory=ToxicitySettings)
-    DB: DbSettings = Field(default_factory=DbSettings)
+    POSTGRES: PostgresSettings = Field(default_factory=PostgresSettings)
     STICKERS: StickersSettings = Field(default_factory=StickersSettings)
 
 

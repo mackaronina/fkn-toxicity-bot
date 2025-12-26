@@ -1,30 +1,15 @@
 from collections.abc import Callable
 from datetime import datetime
 from typing import Any
-from uuid import uuid4
 
-from asyncpg import Connection
 from sqlalchemy import BigInteger, func, JSON
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncAttrs
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from app.config import SETTINGS
 
+engine = create_async_engine(SETTINGS.POSTGRES.get_url() if not SETTINGS.USE_SQLITE else SETTINGS.SQLITE_URL)
 
-class CConnection(Connection):
-    def _get_unique_id(self, prefix: str) -> str:
-        return f"__asyncpg_{prefix}_{uuid4()}__"
-
-
-engine = create_async_engine(
-    SETTINGS.DB.get_url(),
-    connect_args={
-        "statement_cache_size": 0,
-        "prepared_statement_cache_size": 0,
-        "connection_class": CConnection,
-    }
-)
-# 'sqlite+aiosqlite:///DB.sqlite3'
 async_session = async_sessionmaker(engine, expire_on_commit=False)
 
 
@@ -64,7 +49,9 @@ def connection(method: Callable) -> Callable:
     async def wrapper(*args, **kwargs) -> Any:
         async with async_session() as session:
             try:
-                result = await method(*args, session=session, **kwargs)
+                if 'session' not in kwargs:
+                    kwargs['session'] = session
+                result = await method(*args, **kwargs)
                 await session.commit()
                 return result
             except Exception as e:
