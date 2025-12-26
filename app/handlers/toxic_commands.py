@@ -3,46 +3,37 @@ import html
 from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message
-from sqlalchemy import select, func
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import SETTINGS
-from app.database import User, Chat
-from app.middlewares.db import DbSessionMiddleware
+from app.dao.dao import UserDAO, ChatDAO
 
 router = Router()
-router.message.middleware(DbSessionMiddleware())
 
 
 @router.message(Command('rndm'))
-async def msg_rndm(message: Message, session: AsyncSession) -> None:
-    result = await session.execute(
-        select(User).where(User.max_toxic_text.is_not(None)).order_by(func.random()).limit(1)
-    )
-    user = result.scalars().one_or_none()
-    if user is not None:
-        await message.reply(user.max_toxic_text)
+async def msg_rndm(message: Message) -> None:
+    toxic_text = await UserDAO.get_random_text()
+    if toxic_text is not None:
+        await message.reply(toxic_text)
 
 
 @router.message(Command('top'))
-async def msg_top(message: Message, session: AsyncSession) -> None:
+async def msg_top(message: Message) -> None:
     text = 'Эти челы написали больше всего токсичных сообщений. Могут ли они гордиться этим? Несомненно\n\n'
-    result = await session.execute(select(User).where(User.toxic_level > 0).order_by(User.toxic_level.desc()).limit(10))
-    users = result.scalars().all()
+    users = await UserDAO.get_top()
     for i, user in enumerate(users):
         if i == 0:
             text += f'🏆 <b>{user.name}</b>  {user.toxic_level} ☣️\n'
         else:
             text += f'{i + 1}.  {user.name}  {user.toxic_level} ☣️\n'
-    result = await session.execute(select(Chat).where(Chat.toxic_level > 0).order_by(Chat.toxic_level.desc()).limit(1))
-    chat = result.scalars().one_or_none()
+    chat = await ChatDAO.get_best()
     if chat is not None:
         text += f'\nФортеця токсичного фронту:\n<b>{chat.name}</b>'
     await message.reply(text)
 
 
-@router.message(Command('TOXIC'))
-async def msg_toxic(message: Message, session: AsyncSession) -> None:
+@router.message(Command('toxic'))
+async def msg_toxic(message: Message) -> None:
     if message.reply_to_message is not None:
         user_id = message.reply_to_message.from_user.id
         name = html.escape(message.reply_to_message.from_user.full_name)
@@ -50,7 +41,7 @@ async def msg_toxic(message: Message, session: AsyncSession) -> None:
         user_id = message.from_user.id
         name = html.escape(message.from_user.full_name)
     text = f'<b>Токсик {name}</b>\n\n'
-    user = await session.get(User, user_id)
+    user = await UserDAO.find_one_or_none_by_id(user_id)
     if user is not None:
         toxic_level = user.toxic_level
         max_toxic_text = user.max_toxic_text

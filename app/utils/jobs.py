@@ -3,29 +3,22 @@ import logging
 from aiogram import Bot
 from aiogram.exceptions import TelegramAPIError
 from aiogram.types import ChatMemberAdministrator
-from sqlalchemy import select, update
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import SETTINGS
-from app.database import connection, User, Chat
+from app.dao.dao import UserDAO, ChatDAO
 
 
-@connection
-async def job_day(bot: Bot, session: AsyncSession) -> None:
-    result = await session.execute(
-        select(User).where(User.today_toxic_level > 0).order_by(User.today_toxic_level.desc()).limit(1)
-    )
-    user = result.scalars().one_or_none()
+async def job_day(bot: Bot) -> None:
+    user = await UserDAO.get_best_today()
     if user is not None:
         text = f'Сегодня {user.name} перевыполнил норму токсичности'
         logging.info(f'Toxic of the day is {user.name} with id {user.id}. Today toxic level: {user.today_toxic_level}')
     else:
         text = 'Сегодня обошлось без токсиков'
-        logging.info('Today without toxics')
-    await session.execute(update(User).values(today_toxic_level=0))
+        logging.info('Today without toxic users')
+    await UserDAO.update_today_to_zero()
     bot_id = (await bot.get_me()).id
-    result = await session.execute(select(Chat))
-    chats = result.scalars().all()
+    chats = await ChatDAO.find_all()
     for chat in chats:
         try:
             await bot.send_sticker(chat.id, SETTINGS.STICKERS.NIGHT_FILE_ID)
