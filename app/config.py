@@ -53,6 +53,7 @@ class ToxicitySettings(ConfigBase):
 class Settings(ConfigBase):
     BOT_TOKEN: SecretStr
     WEBHOOK_DOMAIN: str
+    USE_POLLING: bool = False
     USE_SQLITE: bool = False
     SQLITE_URL: str = 'sqlite+aiosqlite:///db.sqlite3'
     HOST: str = '0.0.0.0'

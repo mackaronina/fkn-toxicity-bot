@@ -30,7 +30,7 @@ async def main() -> None:
     await set_commands(bot)
 
     app = FastAPI()
-    app.mount('static', StaticFiles(directory=f'{BASE_DIR}/app/static'), 'static')
+    app.mount('/static', StaticFiles(directory=f'{BASE_DIR}/app/static'), 'static')
     app.include_router(webhook.router)
     app.include_router(paint.router)
     app.state.bot = bot
@@ -41,12 +41,15 @@ async def main() -> None:
     scheduler.start()
 
     await bot.delete_webhook()
-    # Uncomment for polling
-    # await dp.start_polling(bot)
-    await bot.set_webhook(url=f'{SETTINGS.WEBHOOK_DOMAIN}/{SETTINGS.BOT_TOKEN.get_secret_value()}',
-                          drop_pending_updates=True)
     logging.info('Bot started')
-    await uvicorn.Server(uvicorn.Config(app, host=SETTINGS.HOST, port=SETTINGS.PORT)).serve()
+    if SETTINGS.USE_POLLING:
+        task1 = asyncio.create_task(uvicorn.Server(uvicorn.Config(app, host=SETTINGS.HOST, port=SETTINGS.PORT)).serve())
+        task2 = asyncio.create_task(dp.start_polling(bot))
+        await asyncio.gather(task1, task2)
+    else:
+        await bot.set_webhook(url=f'{SETTINGS.WEBHOOK_DOMAIN}/{SETTINGS.BOT_TOKEN.get_secret_value()}',
+                              drop_pending_updates=True)
+        await uvicorn.Server(uvicorn.Config(app, host=SETTINGS.HOST, port=SETTINGS.PORT)).serve()
 
 
 if __name__ == '__main__':
