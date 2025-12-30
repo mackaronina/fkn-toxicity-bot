@@ -58,7 +58,7 @@ class Settings(ConfigBase):
     SQLITE_URL: str = 'sqlite+aiosqlite:///db.sqlite3'
     HOST: str = '0.0.0.0'
     PORT: int = 8000
-    REPORT_CHAT_ID: int
+    ADMIN_CHAT_ID: int
     PAINT_WEB_APP_URL: str
     TIME_ZONE: str = 'UTC'
     TOXICITY_ANALYZER: ToxicityAnalyzerSettings = Field(default_factory=ToxicityAnalyzerSettings)
