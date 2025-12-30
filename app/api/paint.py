@@ -1,28 +1,24 @@
 import logging
 from typing import Annotated
 
-from aiogram import Bot
 from aiogram.types import BufferedInputFile
 from aiogram.utils.web_app import safe_parse_webapp_init_data
-from fastapi import APIRouter, Depends, Form, File, UploadFile
+from fastapi import APIRouter, Form, File, UploadFile
 from fastapi.requests import Request
 from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
 
 from app.config import SETTINGS, BASE_DIR
+from app.dependencies import CurrentBot
 from app.keyboards.paint import keyboard_paint_continue
-from app.utils.depends import get_bot
 
 router = APIRouter(prefix='/paint')
 templates = Jinja2Templates(directory=f'{BASE_DIR}/app/templates')
 
 
 @router.post('/send')
-async def send_paint(
-        init_data: Annotated[str, Form()],
-        image: Annotated[UploadFile, File()],
-        bot: Bot = Depends(get_bot)
-) -> JSONResponse:
+async def send_paint(init_data: Annotated[str, Form()], image: Annotated[UploadFile, File()],
+                     bot: CurrentBot) -> JSONResponse:
     try:
         data = safe_parse_webapp_init_data(SETTINGS.BOT_TOKEN.get_secret_value(), init_data)
         chat_id = int(data.start_param.split('__')[0])
@@ -37,11 +33,11 @@ async def send_paint(
 
 
 @router.get('/picture/{file_id}')
-async def get_paint(file_id: str, bot: Bot = Depends(get_bot)) -> StreamingResponse:
+async def get_picture(file_id: str, bot: CurrentBot) -> StreamingResponse:
     downloaded_file = await bot.download(file_id)
     return StreamingResponse(downloaded_file, media_type='image/png')
 
 
 @router.get('/')
-async def get_paint(request: Request) -> HTMLResponse:
+async def get_paint_page(request: Request) -> HTMLResponse:
     return templates.TemplateResponse(name='paint.html', context={'request': request})
