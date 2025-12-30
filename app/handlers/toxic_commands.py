@@ -51,7 +51,7 @@ async def msg_toxic(message: Message) -> None:
         max_toxic_text = None
         reactions_count = None
     text += f'Уровень токсичности:  {toxic_level} ☣️\n'
-    for limit, level_text in SETTINGS.TOXIC.LEVEL_TEXTS.items():
+    for limit, level_text in SETTINGS.TOXICITY_ANALYZER.LEVEL_TEXTS.items():
         if toxic_level < limit:
             text += f'Диагноз:  {level_text}\n'
             break

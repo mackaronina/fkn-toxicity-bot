@@ -32,8 +32,8 @@ class PostgresSettings(ConfigBase):
                 f'@{self.HOST}:{self.PORT}/{self.NAME}')
 
 
-class ToxicitySettings(ConfigBase):
-    model_config = SettingsConfigDict(env_prefix='TOXIC_')
+class ToxicityAnalyzerSettings(ConfigBase):
+    model_config = SettingsConfigDict(env_prefix='TOXICITY_')
     API_KEY: SecretStr
     API_URL: str = 'https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze'
     THRESHOLD: float = 0.6
@@ -57,11 +57,11 @@ class Settings(ConfigBase):
     USE_SQLITE: bool = False
     SQLITE_URL: str = 'sqlite+aiosqlite:///db.sqlite3'
     HOST: str = '0.0.0.0'
-    PORT: int = 80
+    PORT: int = 8000
     REPORT_CHAT_ID: int
     PAINT_WEB_APP_URL: str
     TIME_ZONE: str = 'UTC'
-    TOXIC: ToxicitySettings = Field(default_factory=ToxicitySettings)
+    TOXICITY_ANALYZER: ToxicityAnalyzerSettings = Field(default_factory=ToxicityAnalyzerSettings)
     POSTGRES: PostgresSettings = Field(default_factory=PostgresSettings)
     STICKERS: StickersSettings = Field(default_factory=StickersSettings)
 
