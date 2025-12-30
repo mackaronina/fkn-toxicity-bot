@@ -6,6 +6,7 @@ from aiogram import types
 from aiogram.types import ReactionType, ReactionTypeEmoji
 from sqlalchemy import select, func, update
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm.attributes import flag_modified
 
 from app.dao.base import BaseDAO
 from app.database import User, Chat, connection
@@ -41,11 +42,14 @@ class UserDAO(BaseDAO[User]):
             return
         if len(new_reactions) < 1 or not isinstance(new_reactions[0], ReactionTypeEmoji):
             return
+        if user.reactions_count is None:
+            user.reactions_count = {}
         reaction = new_reactions[0].emoji
         if reaction in user.reactions_count:
             user.reactions_count[reaction] += 1
         else:
             user.reactions_count[reaction] = 1
+        flag_modified(user, 'reactions_count')
 
     @classmethod
     @connection
