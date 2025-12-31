@@ -12,9 +12,9 @@ from fastapi.staticfiles import StaticFiles
 from app.api import webhook, paint
 from app.commands import set_commands
 from app.config import SETTINGS, BASE_DIR
+from app.database import create_tables
 from app.handlers import toxic_commands, commands, reactions, chat_members, errors, messages
 from app.utils.jobs import job_day
-from database import create_tables
 
 
 async def main() -> None:
