@@ -54,7 +54,7 @@ async def generate_cube_gif(profile_pic: BinaryIO) -> BufferedInputFile:
         return BufferedInputFile(resp.content, filename='cube.gif')
 
 
-async def generate_pet_gif(profile_pic: BinaryIO) -> BufferedInputFile:
+def generate_pet_gif(profile_pic: BinaryIO) -> BufferedInputFile:
     img = Image.open(profile_pic)
     mean = dominant_color(img)
     frames = 10

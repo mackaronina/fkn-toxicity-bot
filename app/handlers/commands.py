@@ -31,7 +31,7 @@ async def msg_pet(message: Message, bot: Bot) -> None:
     profile_pic = await get_profile_pic(message, bot)
     if profile_pic is None:
         return
-    gif = await generate_pet_gif(profile_pic)
+    gif = generate_pet_gif(profile_pic)
     if message.reply_to_message is not None:
         await message.reply_to_message.reply_animation(gif)
     else:
