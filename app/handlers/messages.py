@@ -6,7 +6,7 @@ from aiogram.types import Message, ReactionTypeEmoji
 
 from app.config import SETTINGS
 from app.dao.dao import ChatDAO, UserDAO
-from app.utils.analize_toxicity import analize_toxicity
+from app.utils.analyze_toxicity import analyze_toxicity
 
 router = Router()
 
@@ -14,7 +14,7 @@ router = Router()
 @router.message(F.text | F.caption, F.chat.type != 'private')
 async def msg_text(message: Message) -> None:
     text = message.text or message.caption
-    toxicity_percent = await analize_toxicity(text)
+    toxicity_percent = await analyze_toxicity(text)
     if toxicity_percent > SETTINGS.TOXICITY_ANALYZER.THRESHOLD and message.forward_from is None:
         await message.react([ReactionTypeEmoji(emoji=SETTINGS.TOXICITY_ANALYZER.REACTION)])
         await ChatDAO.update_data(message.chat)

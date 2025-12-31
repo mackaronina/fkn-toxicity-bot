@@ -14,4 +14,5 @@ curl-cffi==0.11.4
 pyjokes==0.8.3
 Jinja2==3.1.6
 python-multipart==0.0.20
+aiohttp==3.13.2
 
